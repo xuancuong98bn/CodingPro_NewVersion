@@ -1,0 +1,108 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Player : MonoBehaviour {
+    private Animator anim;
+    private float inputH;
+    private float inputV;
+
+    private Rigidbody rbody;
+    private bool run;
+
+    public float velocity;
+    public float veloRun;
+    public float jump;
+    CapsuleCollider cap;
+    public LayerMask layerCollision;
+
+    // Use this for initialization
+    void Start () {
+        anim = GetComponent<Animator>();
+        rbody = GetComponent<Rigidbody>();
+        run = false;
+        cap = GetComponent<CapsuleCollider>();
+    }
+	
+	// Update is called once per frame
+	void Update () {
+		if(Input.GetKeyDown(KeyCode.J))
+        {
+            anim.Play("WAIT01", -1, 0f);
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            anim.Play("WAIT02", -1, 0f);
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            anim.Play("WAIT03", -1, 0f);
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            anim.Play("WAIT04", -1, 0f);
+        }
+ 
+        
+    }
+
+    private void FixedUpdate()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            run = true;
+        }
+        else
+        {
+            run = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        {
+            anim.SetTrigger("jump");
+            rbody.AddForce(new Vector3(0f, jump, 0f), ForceMode.Impulse);
+        }
+
+        inputH = Input.GetAxis("Horizontal");
+        inputV = Input.GetAxis("Vertical");
+
+        anim.SetFloat("inputH", inputH);
+        anim.SetFloat("inputV", inputV);
+        anim.SetBool("run", run);
+
+        float moveX = inputH * velocity * Time.deltaTime;
+        float moveZ = inputV * velocity * Time.deltaTime;
+
+        if (moveZ <= 0f)
+        {
+            moveX = 0f;
+        }
+        else if (run)
+        {
+            moveX *= veloRun;
+            moveZ *= veloRun;
+        }
+
+        transform.Translate(new Vector3(moveX, 0f, moveZ));
+    }
+    private bool IsGrounded()
+    {
+        Debug.DrawRay(transform.position - new Vector3(0, cap.height / 2 - 1f, 0), Vector3.down * 0.3f, Color.red, 10);
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position - new Vector3(0, cap.height / 2- 1f, 0),Vector3.down, out hit, 0.3f, layerCollision))
+        {
+            Debug.Log(hit.collider.gameObject.name);
+            return true;
+        }
+            
+        else return false;
+    }
+
+    IEnumerator Waiting()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log(jump);
+        rbody.AddForce(new Vector3(0f, jump, 0f), ForceMode.Impulse);
+    }
+
+}
