@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
 
     public GameObject bag;
     public GameObject winObject;
-    public LayerMask layerWin;
+    public GameObject respawnObject;
     public Button nextStage;
 
     // Use this for initialization
@@ -134,6 +134,11 @@ public class Player : MonoBehaviour {
                 GameObject.FindGameObjectWithTag("Sun").transform.Rotate(new Vector3(-140, 0, 0));
                 StartCoroutine(WaitingWin());
             }
+        }
+        Debug.Log(other.gameObject.layer + " va "+ LayerMask.NameToLayer("Dead"));
+        if (other.gameObject.layer == LayerMask.NameToLayer("Dead"))
+        {
+            gameObject.transform.position = respawnObject.transform.position;
         }
     }
 
