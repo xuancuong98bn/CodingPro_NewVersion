@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
 
     private Rigidbody rbody;
     private bool run;
+    private bool isStandWin = false;
 
     public float velocity;
     public float veloRun;
@@ -19,6 +20,8 @@ public class Player : MonoBehaviour {
 
     public GameObject bag;
     public GameObject winObject;
+    public LayerMask layerWin;
+    public Button nextStage;
 
     // Use this for initialization
     void Start () {
@@ -53,7 +56,7 @@ public class Player : MonoBehaviour {
         {
             bag.SetActive(false);
         }
-        if (Input.GetKeyDown(KeyCode.J) && IsStandWinPlace())
+        if (Input.GetKeyDown(KeyCode.J) && isStandWin)
         {
             StartCoroutine(Waiting());
         }
@@ -117,13 +120,34 @@ public class Player : MonoBehaviour {
         winObject.SetActive(true);
     }
 
-    private bool IsStandWinPlace()
+    private void OnTriggerEnter(Collider other)
     {
-        if (Physics.Raycast(transform.position - new Vector3(0, cap.height / 2 - 1f, 0), Vector3.down, 0.3f, 9))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Win"))
         {
-            return true;
+            isStandWin = true;
         }
+        if (other.gameObject.name == "Cylinder")
+        {
+            GameObject.FindGameObjectWithTag("Fire").GetComponent<ParticleSystem>().Play();
+            if (GameObject.FindGameObjectWithTag("Sun").transform.rotation.x > 0)
+            {
+                GameObject.FindGameObjectWithTag("Sun").transform.Rotate(new Vector3(-140, 0, 0));
+                StartCoroutine(WaitingWin());
+            }
+        }
+    }
 
-        else return false;
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Win"))
+        {
+            isStandWin = false;
+        }
+    }
+
+    IEnumerator WaitingWin()
+    {
+        yield return new WaitForSeconds(2f);
+        nextStage.gameObject.SetActive(true);
     }
 }

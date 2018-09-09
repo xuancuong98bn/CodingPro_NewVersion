@@ -11,20 +11,27 @@ public class CollisionFindObject : MonoBehaviour {
     public List<GameObject> listText = new List<GameObject>();
     private int count = 0;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (count == listItem.Capacity)
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F12))
         {
-            secretMessage.SetActive(true);
-            count++;
+            for (int i = 0; i < listItem.Capacity; i++)
+            {
+                listItem[i].SetActive(false);
+                listText[i].GetComponent<Text>().text = listItem[i].name;
+                count++;
+                WinSolve();
+            }
         }
     }
 
+    void WinSolve()
+    {
+        if (count == listItem.Capacity)
+        {
+            secretMessage.SetActive(true);
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "item")
@@ -48,6 +55,7 @@ public class CollisionFindObject : MonoBehaviour {
                     {
                         listText[i].GetComponent<Text>().text = listItem[i].name;
                         count++;
+                        WinSolve();
                     }
                 }
             }
