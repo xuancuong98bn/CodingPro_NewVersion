@@ -20,6 +20,7 @@ public class Player : MonoBehaviour {
 
     public GameObject bag;
     public GameObject tutorial;
+    public GameObject pause;
 
     public GameObject winObject;
     public GameObject respawnObject;
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour {
         rbody = GetComponent<Rigidbody>();
         run = false;
         cap = GetComponent<CapsuleCollider>();
+        Cursor.visible = false;
     }
 	
 	// Update is called once per frame
@@ -64,11 +66,29 @@ public class Player : MonoBehaviour {
         {
             if (bag.activeSelf) bag.SetActive(false);
             tutorial.SetActive(true);
-
         }
         else if (Input.GetKeyUp(KeyCode.T))
         {
             tutorial.SetActive(false);
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            if (Cursor.visible) Cursor.visible = false;
+            else Cursor.visible = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+
+            if (pause.activeSelf)
+            {
+                Cursor.visible = false;
+                pause.SetActive(false);
+            }
+            else
+            {
+                Cursor.visible = true;
+                pause.SetActive(true);
+            }
         }
         if (Input.GetKeyDown(KeyCode.J) && isStandWin)
         {
@@ -76,6 +96,10 @@ public class Player : MonoBehaviour {
         }
     }
 
+    public void SetPauseNonActive()
+    {
+        pause.SetActive(false);
+    }
     private void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.LeftShift))
@@ -132,6 +156,7 @@ public class Player : MonoBehaviour {
     {
         yield return new WaitForSeconds(0.5f);
         winObject.SetActive(true);
+        GameObject.FindGameObjectWithTag("KeyWin").SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -166,7 +191,7 @@ public class Player : MonoBehaviour {
 
     IEnumerator WaitingWin()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         nextStage.gameObject.SetActive(true);
     }
 }
