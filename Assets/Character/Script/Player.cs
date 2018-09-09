@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
@@ -15,6 +16,9 @@ public class Player : MonoBehaviour {
     public float jump;
     CapsuleCollider cap;
     public LayerMask layerCollision;
+
+    public GameObject bag;
+    public GameObject winObject;
 
     // Use this for initialization
     void Start () {
@@ -42,8 +46,17 @@ public class Player : MonoBehaviour {
         {
             anim.Play("WAIT04", -1, 0f);
         }
- 
-        
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            bag.SetActive(true);
+        } else if (Input.GetKeyUp(KeyCode.B))
+        {
+            bag.SetActive(false);
+        }
+        if (Input.GetKeyDown(KeyCode.J) && IsStandWinPlace())
+        {
+            StartCoroutine(Waiting());
+        }
     }
 
     private void FixedUpdate()
@@ -101,8 +114,16 @@ public class Player : MonoBehaviour {
     IEnumerator Waiting()
     {
         yield return new WaitForSeconds(0.5f);
-        Debug.Log(jump);
-        rbody.AddForce(new Vector3(0f, jump, 0f), ForceMode.Impulse);
+        winObject.SetActive(true);
     }
 
+    private bool IsStandWinPlace()
+    {
+        if (Physics.Raycast(transform.position - new Vector3(0, cap.height / 2 - 1f, 0), Vector3.down, 0.3f, 9))
+        {
+            return true;
+        }
+
+        else return false;
+    }
 }

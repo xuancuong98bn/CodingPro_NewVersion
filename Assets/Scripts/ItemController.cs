@@ -6,9 +6,9 @@ public class ItemController : MonoBehaviour {
 
     public GameObject particalSys;
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        GameObject par = Instantiate(particalSys);
+         GameObject par = Instantiate(particalSys);
         par.transform.position = transform.position;
         par.GetComponent<ParticleSystem>().Play();
     }
