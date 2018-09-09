@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level_1_Scene.unity
     guid: e96276b4dec0d5246a474f4c4f9442f4
+  - enabled: 1
+    path: Assets/MapMagic/Demo/Scenes/DemoScene.unity
+    guid: 19f4ee3e0d36b824292051a24c4a010f
   m_configObjects: {}

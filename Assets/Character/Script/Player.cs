@@ -19,6 +19,8 @@ public class Player : MonoBehaviour {
     public LayerMask layerCollision;
 
     public GameObject bag;
+    public GameObject tutorial;
+
     public GameObject winObject;
     public GameObject respawnObject;
     public Button nextStage;
@@ -51,10 +53,22 @@ public class Player : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.B))
         {
+            if (tutorial.activeSelf) tutorial.SetActive(false);
             bag.SetActive(true);
+
         } else if (Input.GetKeyUp(KeyCode.B))
         {
             bag.SetActive(false);
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            if (bag.activeSelf) bag.SetActive(false);
+            tutorial.SetActive(true);
+
+        }
+        else if (Input.GetKeyUp(KeyCode.T))
+        {
+            tutorial.SetActive(false);
         }
         if (Input.GetKeyDown(KeyCode.J) && isStandWin)
         {

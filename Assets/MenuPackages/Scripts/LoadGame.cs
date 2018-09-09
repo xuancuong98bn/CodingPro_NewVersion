@@ -13,6 +13,12 @@ public class LoadGame : MonoBehaviour {
     public void OpenGame(int scenceIndex)
     {
         loadingGame.SetActive(true);
+        if (scenceIndex > 1)
+        {
+            GameObject.FindGameObjectWithTag("MainCamera").transform.SetPositionAndRotation(loadingGame.transform.position, loadingGame.transform.rotation);
+            GameObject.FindGameObjectWithTag("MainCamera").transform.localRotation = loadingGame.transform.rotation;
+            //GameObject.FindGameObjectWithTag("MainCamera").transform.position = loadingGame.transform.position - new Vector3(0,0,100f) ;
+        }
         StartCoroutine(LoadAsynchronously(scenceIndex));
     }
 	IEnumerator LoadAsynchronously (int scenceIndex)
